@@ -42,7 +42,11 @@ export default defineConfig({
           { text: '入门', link: '/guide/start' },
           { text: '配置', link: '/guide/option' },
           { text: '国际化', link: '/guide/i18n' },
-          { text: '数据结构', link: '/guide/schema' }
+          { text: '数据结构', link: '/guide/schema' },
+          {
+            text: 'Ant Design Vue DatePicker',
+            link: '/guide/datepicker-adapter-ant-design-vue'
+          }
         ]
       },
       {

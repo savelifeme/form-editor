@@ -60,10 +60,11 @@ import { IGraffitiOption } from '../interface/Graffiti'
 import { defaultGraffitiOption } from '../dataset/constant/Graffiti'
 import { IWhiteSpaceOption } from '../interface/WhiteSpace'
 import { defaultWhiteSpaceOption } from '../dataset/constant/WhiteSpace'
+import { IDatePickerAdapter } from '../interface/Control'
 
 export function mergeOption(
   options: IEditorOption = {}
-): DeepRequired<IEditorOption> {
+): Omit<DeepRequired<IEditorOption>, 'datePickerAdapter'> & { datePickerAdapter?: IDatePickerAdapter } {
   const tableOptions: Required<ITableOption> = {
     ...defaultTableOption,
     ...options.table
@@ -255,6 +256,7 @@ export function mergeOption(
     label: labelOptions,
     imgCaption: imgCaptionOptions,
     list: listOptions,
-    magnifier: magnifierOptions
+    magnifier: magnifierOptions,
+    datePickerAdapter: options.datePickerAdapter
   }
 }

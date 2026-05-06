@@ -143,6 +143,8 @@ export interface IControlInstance {
   ): number
   keydown(evt: KeyboardEvent): number | null
   cut(): number
+  awake?(): void
+  getIsReadonlyInput?(): boolean
 }
 
 export interface IControlContext {
@@ -247,4 +249,50 @@ export interface IDestroyControlOption {
 export interface IRemoveControlOption {
   id?: string
   conceptId?: string
+}
+
+/**
+ * Context object provided to date picker adapters when activated.
+ * Contains all necessary information for rendering and positioning an external date picker.
+ */
+export interface IDatePickerContext {
+  /** Container element positioned at the correct location for rendering the date picker */
+  container: HTMLDivElement
+  /** Current date value as a string */
+  value: string
+  /** Left position (in pixels) for the date picker popup */
+  left: number
+  /** Top position (in pixels) for the date picker popup */
+  top: number
+  /** Optional date format string (e.g., 'YYYY-MM-DD HH:mm:ss') */
+  dateFormat?: string
+  /** Optional extension data from the control (e.g., picker type config) */
+  extension?: unknown
+  /** Callback to submit the selected date value */
+  onSubmit: (date: string) => void
+}
+
+/**
+ * Interface for external date picker implementations.
+ * Allows third-party date picker libraries to integrate with the canvas editor's date control.
+ */
+export interface IDatePickerAdapter {
+  /**
+   * Called when the date control is activated (user clicks/focuses the date control).
+   * Initialize and render the external date picker using the provided context.
+   * @param context - Context object containing container, value, position, and callback
+   */
+  awake(context: IDatePickerContext): void
+
+  /**
+   * Called when the date control is deactivated or destroyed.
+   * Clean up resources (destroy the picker instance, remove event listeners, etc.)
+   */
+  destroy(): void
+
+  /**
+   * Called to check if the date picker popup is currently visible.
+   * @returns true if the picker is visible, false otherwise
+   */
+  isVisible(): boolean
 }

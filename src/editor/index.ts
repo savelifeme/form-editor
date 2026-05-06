@@ -68,12 +68,17 @@ import {
 import { BackgroundRepeat, BackgroundSize } from './dataset/enum/Background'
 import { TextDecorationStyle } from './dataset/enum/Text'
 import { mergeOption } from './utils/option'
+import { DeepRequired } from './interface/Common'
 import { LineNumberType } from './dataset/enum/LineNumber'
 import { AreaMode } from './dataset/enum/Area'
 import { IBadge } from './interface/Badge'
 import { WatermarkType, WatermarkLayer } from './dataset/enum/Watermark'
 import { INTERNAL_SHORTCUT_KEY } from './dataset/constant/Shortcut'
 import { IGraffitiData } from './interface/Graffiti'
+import {
+  IDatePickerAdapter,
+  IDatePickerContext
+} from './interface/Control'
 
 export default class Editor {
   public command: Command
@@ -91,7 +96,7 @@ export default class Editor {
     options: IEditorOption = {}
   ) {
     // 合并配置
-    const editorOptions = mergeOption(options)
+    const editorOptions = mergeOption(options) as DeepRequired<IEditorOption>
     // 数据处理
     data = deepClone(data)
     let headerElementList: IElement[] = []
@@ -238,5 +243,7 @@ export type {
   IRange,
   IRangeStyle,
   IBadge,
-  IGetElementListByHTMLOption
+  IGetElementListByHTMLOption,
+  IDatePickerAdapter,
+  IDatePickerContext
 }

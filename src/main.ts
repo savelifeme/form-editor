@@ -1,5 +1,6 @@
-import { commentList, data, options } from './mock'
+import { commentList, options } from './mock'
 import './style.css'
+import 'ant-design-vue/dist/reset.css'
 import prism from 'prismjs'
 import Editor, {
   BlockType,
@@ -22,6 +23,11 @@ import Editor, {
   TitleLevel,
   splitText
 } from './editor'
+import {
+  antDatePickerPlugin,
+  CommandWithAntDatePicker,
+  AntPickerType
+} from './plugins/ant-date-picker'
 import { Dialog } from './components/dialog/Dialog'
 import { formatPrismToken } from './utils/prism'
 import { Signature } from './components/signature/Signature'
@@ -38,12 +44,12 @@ window.onload = function () {
     {
       header: [
         {
-          value: '第一人民医院',
+          value: '春风不语',
           size: 32,
           rowFlex: RowFlex.CENTER
         },
         {
-          value: '\n门诊病历',
+          value: '\n门历',
           size: 18,
           rowFlex: RowFlex.CENTER
         },
@@ -52,10 +58,56 @@ window.onload = function () {
           type: ElementType.SEPARATOR
         }
       ],
-      main: <IElement[]>data,
+      // main: <IElement[]>data,
+      main: [
+        {
+          type: ElementType.CONTROL,
+          value: '',
+          control: {
+            type: ControlType.TEXT,
+            value: [
+              {
+                value:
+                  '仪器合格证、检验报告及配件齐全，仪器性能检验和性能参数等基本满足要求，外观检查基本满足产品标准和说明书的规定，仪器设备测读正常'
+              }
+            ],
+            deletable: false, // 不可删除
+            disabled: false // 不禁用
+          }
+        },
+        {
+          type: ElementType.TABLE,
+          value: '',
+          trList: [
+            {
+              height: 21,
+              tdList: [
+                {
+                  colspan: 1,
+                  rowspan: 1,
+                  value: [
+                    {
+                      value: ' ', // 保留至少一个元素
+                      size: 5
+                    }
+                  ]
+                }
+              ],
+              minHeight: 20
+            }
+          ],
+          width: 554,
+          height: 21,
+          colgroup: [
+            {
+              width: 554
+            }
+          ]
+        }
+      ],
       footer: [
         {
-          value: 'canvas-editor',
+          value: ' ',
           size: 12
         }
       ]
@@ -67,6 +119,9 @@ window.onload = function () {
   Reflect.set(window, 'editor', instance)
   // canvas-editor-devtools使用
   Reflect.set(window, '__CANVAS_EDITOR_INSTANCE__', instance)
+
+  // 插件使用示例：Ant Design Vue DatePicker
+  instance.use(antDatePickerPlugin)
 
   // 菜单弹窗销毁
   window.addEventListener(
@@ -1070,6 +1125,57 @@ window.onload = function () {
         ]
       }
     ])
+  }
+
+  // Ant Design Vue 日期控件（多种选择器类型）
+  const antDatePickerDom = document.querySelector<HTMLDivElement>(
+    '.menu-item__ant-date-picker'
+  )!
+  const antDatePickerSelectDom =
+    antDatePickerDom.querySelector<HTMLSpanElement>('.select')!
+  const antDatePickerOptionDom =
+    antDatePickerDom.querySelector<HTMLDivElement>('.options')!
+  antDatePickerDom.onclick = function () {
+    console.log('ant-date-picker')
+    antDatePickerOptionDom.classList.toggle('visible')
+    const bodyRect = document.body.getBoundingClientRect()
+    const optionRect = antDatePickerOptionDom.getBoundingClientRect()
+    if (optionRect.left + optionRect.width > bodyRect.width) {
+      antDatePickerOptionDom.style.right = '0px'
+      antDatePickerOptionDom.style.left = 'unset'
+    } else {
+      antDatePickerOptionDom.style.right = 'unset'
+      antDatePickerOptionDom.style.left = '0px'
+    }
+  }
+
+  function getAntCommandName(pickerType: AntPickerType): string {
+    const map: Record<string, string> = {
+      date: 'executeInsertAntDatePicker',
+      datetime: 'executeInsertAntDateTimePicker',
+      range: 'executeInsertAntRangePicker',
+      'datetime-range': 'executeInsertAntDateTimeRangePicker',
+      year: 'executeInsertAntYearPicker',
+      'year-range': 'executeInsertAntYearRangePicker',
+      month: 'executeInsertAntMonthPicker',
+      'month-range': 'executeInsertAntMonthRangePicker',
+      time: 'executeInsertAntTimePicker',
+      'time-range': 'executeInsertAntTimeRangePicker',
+      'datetime-hour': 'executeInsertAntDateTimeHourPicker',
+      'datetime-hour-minute': 'executeInsertAntDateTimeHourMinutePicker'
+    }
+    return map[pickerType] || 'executeInsertAntDatePicker'
+  }
+
+  antDatePickerOptionDom.onmousedown = function (evt) {
+    const li = evt.target as HTMLLIElement
+    const pickerType = li.dataset.antPicker as AntPickerType
+    if (!pickerType) return
+    antDatePickerOptionDom.classList.remove('visible')
+    antDatePickerSelectDom.innerText = li.innerText.trim()
+    const command = instance.command as CommandWithAntDatePicker
+    const cmdName = getAntCommandName(pickerType)
+    ;(command as any)[cmdName]()
   }
 
   const blockDom = document.querySelector<HTMLDivElement>('.menu-item__block')!

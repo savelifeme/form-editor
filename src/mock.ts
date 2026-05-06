@@ -4,7 +4,8 @@ import {
   IEditorOption,
   IElement,
   ListType,
-  TitleLevel
+  TitleLevel,
+  PageMode
 } from './editor'
 
 const text = `主诉：\n发热三天，咳嗽五天。\n现病史：\n患者于三天前无明显诱因，感冒后发现面部水肿，无皮疹，尿量减少，出现乏力，在外治疗无好转，现来我院就诊。\n既往史：\n有糖尿病10年，有高血压2年，有传染性疾病1年。报告其他既往疾病。\n流行病史：\n否认14天内接触过确诊患者、疑似患者、无症状感染者及其密切接触者；否认14天内去过以下场所：水产、肉类批发市场，农贸市场，集市，大型超市，夜市；否认14天内与以下场所工作人员密切接触：水产、肉类批发市场，农贸市场，集市，大型超市；否认14天内周围（如家庭、办公室）有2例以上聚集性发病；否认14天内接触过有发热或呼吸道症状的人员；否认14天内自身有发热或呼吸道症状；否认14天内接触过纳入隔离观察的人员及其他可能与新冠肺炎关联的情形；陪同家属无以上情况。\n体格检查：\nT：39.5℃，P：80bpm，R：20次/分，BP：120/80mmHg；\n辅助检查：\n2020年6月10日，普放：血细胞比容36.50%（偏低）40～50；单核细胞绝对值0.75*10/L（偏高）参考值：0.1～0.6；\n门诊诊断：处置治疗：电子签名：【】\n其他记录：`
@@ -418,24 +419,6 @@ elementList.push(
   ])
 )
 
-// 模拟Label标签
-elementList.push(
-  ...(<IElement[]>[
-    {
-      value: '诊断标签：'
-    },
-    {
-      type: ElementType.LABEL,
-      value: '高血压',
-      labelId: 'l1',
-      size: 14
-    },
-    {
-      value: '\n'
-    }
-  ])
-)
-
 // 模拟固定长度下划线
 elementList.push(
   ...[
@@ -454,29 +437,6 @@ elementList.push(
         postfix: '\u200c',
         minWidth: 160,
         underline: true
-      }
-    }
-  ]
-)
-
-elementList.push(
-  ...[
-    {
-      value: '\n就诊次数：'
-    },
-    {
-      type: ElementType.CONTROL,
-      value: '',
-      control: {
-        conceptId: '7',
-        type: ControlType.NUMBER,
-        value: null,
-        placeholder: '就诊次数',
-        prefix: '{',
-        postfix: '}',
-        numberExclusiveOptions: {
-          calculatorDisabled: false
-        }
       }
     }
   ]
@@ -530,7 +490,7 @@ export const commentList: IComment[] = [
 export const options: IEditorOption = {
   margins: [100, 120, 100, 120],
   watermark: {
-    data: 'CANVAS-EDITOR',
+    data: ' ',
     size: 120
   },
   pageNumber: {
@@ -542,5 +502,28 @@ export const options: IEditorOption = {
   zone: {
     tipDisabled: false
   },
+  // 设置行高关键参数
+  defaultBasicRowMarginHeight: 1.2, // 默认行高。默认：8
+  // 设置表格高度的关键参数
+  table: {
+    defaultTrMinHeight: 20,
+    tdPadding: [2, 2, 1, 2]
+  },
+  // unicode 英文编码
+  // 左方括号 -> [ , 字符->  `\u005B`
+  // 右方括号 -> ] , 字符->  `\u005D`
+  // 左花括号 -> { , 字符->  `\u007B`
+  // 右花括号 -> } , 字符->  `\u007D`
+  // 无字符  -> 无 , 字符->  `\u200c`
+  // 控件配置
+  control: {
+    prefix: '\u005B', // 不可见的控制字符 "\u200c" Unicode 中的 零宽非连接符
+    postfix: '\u005D', // 不可见的控制字符 "\u200c" Unicode 中的 零宽非连接符
+    activeBackgroundColor: '#f9ff04d6', // 激活时高亮色
+    disabledBackgroundColor: '#fafafa', // 禁用背景色
+    existValueBackgroundColor: '#a2eb8fff', // 存在值时颜色
+    noValueBackgroundColor: '#f7f1dc' // 不存在值时颜色
+  },
+  pageMode: PageMode.CONTINUITY,
   maskMargin: [60, 0, 30, 0] // 菜单栏高度60，底部工具栏30为遮盖层
 }

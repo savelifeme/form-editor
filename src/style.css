@@ -564,6 +564,18 @@ ul {
   width: 160px;
 }
 
+.menu-item__ant-date-picker i {
+  background-image: url('./assets/images/date.svg');
+}
+
+.menu-item__ant-date-picker {
+  position: relative;
+}
+
+.menu-item .menu-item__ant-date-picker .options {
+  width: 100px;
+}
+
 .menu-item__block i {
   background-image: url('./assets/images/block.svg');
 }

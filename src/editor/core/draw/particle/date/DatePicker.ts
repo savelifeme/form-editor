@@ -513,12 +513,12 @@ export class DatePicker {
   private _submit() {
     if (this.options.onSubmit && this.pickDate) {
       const format = this.renderOptions?.dateFormat
-      const pickDateString = this.formatDate(this.pickDate, format)
+      const pickDateString = DatePicker.formatDate(this.pickDate, format)
       this.options.onSubmit(pickDateString)
     }
   }
 
-  public formatDate(date: Date, format = 'YYYY-MM-DD HH:mm:ss'): string {
+  public static formatDate(date: Date, format = 'YYYY-MM-DD HH:mm:ss'): string {
     let dateString = format
     const year = date.getFullYear().toString()
     const month = (date.getMonth() + 1).toString()

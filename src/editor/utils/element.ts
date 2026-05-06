@@ -1207,7 +1207,7 @@ export function createDomFromElementList(
   elementList: IElement[],
   options?: IEditorOption
 ) {
-  const editorOptions = mergeOption(options)
+  const editorOptions = mergeOption(options) as DeepRequired<IEditorOption>
   function buildDom(payload: IElement[]): HTMLDivElement {
     const clipboardDom = document.createElement('div')
     for (let e = 0; e < payload.length; e++) {

@@ -65,7 +65,9 @@
     "vue": "^3.2.45"
   },
   "dependencies": {
-    "prismjs": "^1.27.0"
+    "prismjs": "^1.27.0",
+    "ant-design-vue": "^4.2.0",
+    "dayjs": "^1.11.0"
   },
   "simple-git-hooks": {
     "pre-commit": "npm run lint && npm run type:check",

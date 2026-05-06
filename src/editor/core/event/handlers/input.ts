@@ -86,6 +86,12 @@ export function input(data: string, host: CanvasEvent) {
   const control = draw.getControl()
   let curIndex: number
   if (control.getActiveControl() && control.getIsRangeWithinControl()) {
+    const activeControl = control.getActiveControl()!
+    // 只读输入控件（如日期控件）禁止手动输入，仅通过弹窗选择
+    if (activeControl.getIsReadonlyInput?.()) {
+      activeControl.awake?.()
+      return
+    }
     curIndex = control.setValue(inputData)
     if (!isComposing) {
       control.emitControlContentChange()

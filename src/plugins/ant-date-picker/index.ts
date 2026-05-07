@@ -5,8 +5,12 @@
  * 的日期控件中。支持多种选择器类型，通过 control.extension.antPickerType 标识。
  */
 import { createApp, h } from 'vue'
-import { DatePicker, TimePicker } from 'ant-design-vue'
+import { ConfigProvider, DatePicker, TimePicker } from 'ant-design-vue'
+import zhCN from 'ant-design-vue/locale/zh_CN'
+import 'dayjs/locale/zh-cn'
 import dayjs, { Dayjs } from 'dayjs'
+
+dayjs.locale('zh-cn')
 import Editor, {
   ControlType,
   ElementType,
@@ -240,10 +244,10 @@ function createAntDatePickerAdapter(): IDatePickerAdapter {
         context.onSubmit(date.format(fmt))
       }
 
-      // 创建 Vue 应用
+      // 创建 Vue 应用（使用 ConfigProvider 设置中文）
       app = createApp({
         setup() {
-          return () => {
+          return () => h(ConfigProvider, { locale: zhCN }, () => {
             const commonProps: Record<string, unknown> = {
               open: true,
               getPopupContainer: () => context.container,
@@ -386,7 +390,7 @@ function createAntDatePickerAdapter(): IDatePickerAdapter {
                   }
                 })
             }
-          }
+          })
         }
       })
 
